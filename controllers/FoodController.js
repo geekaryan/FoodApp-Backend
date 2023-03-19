@@ -61,9 +61,15 @@ exports.createOrder = async (req, res) => {
 
 exports.update = async (req, res) => {
   try {
-    const orderupdate = await Order.findByIdAndUpdate(req.params.id, req.body, {
+    const orderUpdate = await Order.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
+    });
+    res.status(200).json({
+      status: "success",
+      data: {
+        orderUpdate,
+      },
     });
   } catch (err) {
     res.status(404).json({
@@ -74,7 +80,7 @@ exports.update = async (req, res) => {
 };
 
 //delete a tour
-exports.delet = async (req, res) => {
+exports.delete = async (req, res) => {
   try {
     await Order.findByIdAndDelete(req.params.id, req.body);
     res.status(200).json({
