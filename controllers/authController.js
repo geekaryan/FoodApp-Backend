@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('./../modal/usermodal');
+const { promisify } = require('util');
 
 //sending token while singup
 
@@ -71,4 +72,47 @@ exports.login = async (req, res, next) => {
       message: err.message,
     });
   }
+};
+
+//protection middleware
+exports.protect = async (req, res, next) => {
+  //getting token if it's there
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
+    token = req.headers.authorization.split(' ')[1];
+  }
+
+  if (!token) {
+    res.status(401).json({
+      status: 'fail',
+      message: 'Your not logged in! Please log in and try again.',
+    });
+  }
+
+  //verification token
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+
+  //Check if user still exists
+  const freshUser = await User.findById(decoded.id);
+  if (!freshUser) {
+    res.status(401).json({
+      status: 'fail',
+      message: "The user belonging to the token doesn't exist",
+    });
+  }
+
+  //check if user password changed after the token is being given..
+  if (freshUser.changedPasswordAfter(decoded.iat)) {
+    res.status(401).json({
+      status: 'fail',
+      message: 'User recently changed password please login again',
+    });
+  }
+
+  //grant access to protect route...
+  req.user = freshUser;
+  next();
 };

@@ -1,12 +1,16 @@
-const express = require("express");
-const FoodController = require("./../controllers/FoodController");
+const express = require('express');
+const FoodController = require('./../controllers/FoodController');
+const authController = require('./../controllers/authController');
 
 const router = express.Router();
 
-router.route("/").get(FoodController.getOrder).post(FoodController.createOrder);
+router
+  .route('/')
+  .get(authController.protect, FoodController.getOrder)
+  .post(FoodController.createOrder);
 
 router
-  .route("/:id")
+  .route('/:id')
   .get(FoodController.findbyOne)
   .patch(FoodController.update)
   .delete(FoodController.delete);
