@@ -10,6 +10,30 @@ const signToken = (id) => {
   });
 };
 
+const createSendToken = (user, statusCode, res) => {
+  const token = signToken(user._id);
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true,
+  };
+  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+
+  //cookie sending
+  res.cookie('jwt', token, cookieOptions);
+
+  //remove password
+  user.password = null;
+  res.status(statusCode).json({
+    stats: 'success',
+    token,
+    data: {
+      user,
+    },
+  });
+};
+
 exports.singUp = async (req, res) => {
   try {
     const newUser = await User.create({
@@ -19,6 +43,7 @@ exports.singUp = async (req, res) => {
       passwordConfirm: req.body.passwordConfirm,
       passwordChangedAt: req.body.passwordChangedAt,
     });
+
     const token = signToken(newUser._id);
     res.status(200).json({
       status: 'success',
@@ -27,6 +52,7 @@ exports.singUp = async (req, res) => {
         newUser,
       },
     });
+    createSendToken(newUser, 201, res);
   } catch (err) {
     res.status(404).json({
       status: 'fail',
@@ -66,6 +92,7 @@ exports.login = async (req, res, next) => {
       status: 'success',
       token,
     });
+    createSendToken(user, 200, res);
   } catch (err) {
     res.status(404).json({
       status: 'fail',
