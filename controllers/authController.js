@@ -16,17 +16,19 @@ const createSendToken = (user, statusCode, res) => {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
+    // secure: true,
     httpOnly: true,
   };
+
   if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
 
   //cookie sending
   res.cookie('jwt', token, cookieOptions);
 
-  //remove password
-  user.password = null;
+  //remove the password from the output
+  user.password = undefined;
   res.status(statusCode).json({
-    stats: 'success',
+    status: 'success',
     token,
     data: {
       user,
@@ -43,16 +45,16 @@ exports.singUp = async (req, res) => {
       passwordConfirm: req.body.passwordConfirm,
       passwordChangedAt: req.body.passwordChangedAt,
     });
-
-    const token = signToken(newUser._id);
-    res.status(200).json({
-      status: 'success',
-      token,
-      data: {
-        newUser,
-      },
-    });
     createSendToken(newUser, 201, res);
+
+    // const token = signToken(newUser._id);
+    // res.status(200).json({
+    //   status: 'success',
+    //   token,
+    //   data: {
+    //     newUser,
+    //   },
+    // });
   } catch (err) {
     res.status(404).json({
       status: 'fail',
@@ -77,7 +79,7 @@ exports.login = async (req, res, next) => {
     //check if user exist and password is correct..
 
     const user = await User.findOne({ email }).select('+password');
-    console.log(user);
+    // console.log(user);
 
     if (!user || !(await user.correctPassword(password, user.password))) {
       res.status(401).json({
@@ -85,14 +87,14 @@ exports.login = async (req, res, next) => {
         message: 'Incorrect email or password',
       });
     }
+    createSendToken(user, 200, res);
 
     //if everything is fine send the jwt token..
-    const token = signToken(user._id);
-    res.status(200).json({
-      status: 'success',
-      token,
-    });
-    createSendToken(user, 200, res);
+    // const token = signToken(user._id);
+    // res.status(200).json({
+    //   status: 'success',
+    //   token,
+    // });
   } catch (err) {
     res.status(404).json({
       status: 'fail',
