@@ -4,14 +4,11 @@ const authController = require('./../controllers/authController');
 
 const router = express.Router();
 
-router
-  .route('/')
-  .get(authController.protect, MenuController.find)
-  .post(MenuController.create);
+router.route('/').get(MenuController.find).post(MenuController.create);
 
 router
   .route('/:id')
-  .get(authController.protect, MenuController.findById)
+  .get(MenuController.findById)
   .patch(MenuController.update)
   .delete(MenuController.delete);
 
