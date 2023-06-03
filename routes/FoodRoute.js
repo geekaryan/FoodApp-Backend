@@ -6,7 +6,7 @@ const router = express.Router();
 
 router
   .route('/')
-  // .get(authController.protect, FoodController.getOrder) //not making protected route for now..
+  .get(authController.protect, FoodController.getOrder) //not making protected route for now..
   .get(FoodController.getOrder)
   .post(FoodController.createOrder);
 

@@ -1,13 +1,17 @@
-const express = require("express");
-const MenuController = require("./../controllers/MenuController");
+const express = require('express');
+const MenuController = require('./../controllers/MenuController');
+const authController = require('./../controllers/authController');
 
 const router = express.Router();
 
-router.route("/").get(MenuController.find).post(MenuController.create);
+router
+  .route('/')
+  .get(authController.protect, MenuController.find)
+  .post(MenuController.create);
 
 router
-  .route("/:id")
-  .get(MenuController.findById)
+  .route('/:id')
+  .get(authController.protect, MenuController.findById)
   .patch(MenuController.update)
   .delete(MenuController.delete);
 
