@@ -3,19 +3,19 @@ const dotenv = require('dotenv');
 dotenv.config({ path: './config.env' });
 const app = require('./app');
 
-const DB = process.env.DATABASE.replace(
-  '<PASSWORD>',
-  process.env.DATABASE_PASSWORD
-);
+const DB =
+  'mongodb+srv://sudoaptrana:aryan012@cluster0.ttung.mongodb.net/FoodApp?retryWrites=true&w=majority';
+
 mongoose
   .connect(DB, {
-    useCreateIndex: true,
-    useFindAndModify: false,
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
   .then(() => {
     console.log('DATABASE is connected');
+  })
+  .catch((err) => {
+    console.error('Connection error', err);
   });
 
 const port = 7000;
