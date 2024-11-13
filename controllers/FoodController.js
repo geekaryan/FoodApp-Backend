@@ -1,29 +1,30 @@
 const Order = require('./../modal/Foodmodal.js');
-const redis = require('redis');
+const {
+  connectRedis,
+  checkCache,
+  setCache,
+} = require('./../middlewares/CacheRedisMiddleware');
 
-let redisClient;
-let cacheHits = 0;
-let dbRequest = 0;
+const intializeRedis = async () => {
+  try {
+    await connectRedis();
+  } catch (err) {
+    console.error(err);
+  }
+};
 
-(async () => {
-  redisClient = redis.createClient();
-
-  redisClient.on('error', (error) => console.log(`Error: ${error}`));
-
-  await redisClient.connect();
-})();
+intializeRedis();
 
 //get all orders
 exports.getOrder = async (req, res) => {
   let isCached = false;
   let orders;
   try {
-    const cacheResult = await redisClient.get('orders');
+    const cacheResult = await checkCache('orders');
     if (cacheResult) {
       isCached = true;
-      orders = JSON.parse(cacheResult);
-      cacheHits++;
-      console.log(`Cache hits: ${cacheHits}`);
+      orders = cacheResult;
+      console.log('I am here at the cache hit');
     } else {
       orders = await Order.find();
       if (orders.length === 0) {
@@ -31,9 +32,7 @@ exports.getOrder = async (req, res) => {
       }
 
       //here storing data in the cache with key
-      await redisClient.set('orders', JSON.stringify(orders));
-      dbRequest++;
-      console.log(`Database requests: ${dbRequest}`);
+      setCache('orders', orders);
     }
     res.status(200).json({
       status: 'success',
@@ -51,7 +50,7 @@ exports.getOrder = async (req, res) => {
   }
 };
 
-//-----> Correct version
+//-----> Correct previous version without caching
 // exports.getOrder = async (req, res) => {
 //   try {
 //     const orders = await Order.find();
