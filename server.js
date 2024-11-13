@@ -3,8 +3,7 @@ const dotenv = require('dotenv');
 dotenv.config({ path: './config.env' });
 const app = require('./app');
 
-const DB =
-  'mongodb+srv://sudoaptrana:aryan012@cluster0.ttung.mongodb.net/FoodApp?retryWrites=true&w=majority';
+const DB = `mongodb+srv://tester1:1234@cluster0.zv8kinz.mongodb.net/FoodApp?retryWrites=true&w=majority`;
 
 mongoose
   .connect(DB, {
