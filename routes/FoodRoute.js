@@ -6,8 +6,8 @@ const router = express.Router();
 
 router
   .route('/')
-  .get(authController.protect, FoodController.getOrder) //not making protected route for now..
-  .post(authController.protect, FoodController.createOrder);
+  .get(FoodController.getOrder) //not making protected route for now..
+  .post(FoodController.createOrder);
 
 router
   .route('/:id')
