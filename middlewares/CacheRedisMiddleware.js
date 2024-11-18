@@ -32,7 +32,8 @@ const checkCache = async (key) => {
 //this is used to set the cache in the redis
 const setCache = async (key, value) => {
   try {
-    await redisClient.set(key, JSON.stringify(value));
+    console.log('Going to set cache');
+    await redisClient.setEx(key, 60, JSON.stringify(value));
   } catch (err) {
     console.log(`Error: ${err}`);
     return null;
