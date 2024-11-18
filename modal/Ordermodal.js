@@ -10,7 +10,8 @@ const placedSchema = new mongoose.Schema({
     required: [true, 'Must have a price'],
   },
   customer_id: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: [true, 'A user must be there who ordered'],
   },
 });

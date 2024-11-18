@@ -8,5 +8,8 @@ router
   .get(OrderController.findAll)
   .post(OrderController.createOrder);
 
-router.route('/:id').delete(OrderController.delete);
+router
+  .route('/:id')
+  .delete(OrderController.delete)
+  .get(OrderController.findOne);
 module.exports = router;
