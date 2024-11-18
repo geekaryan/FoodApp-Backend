@@ -9,8 +9,8 @@ const DB = process.env.DATABASE.replace(
 );
 mongoose
   .connect(DB, {
-    useCreateIndex: true,
-    useFindAndModify: false,
+    // useCreateIndex: true,
+    // useFindAndModify: false,
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })

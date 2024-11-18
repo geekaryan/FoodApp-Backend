@@ -4,6 +4,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const FoodRoute = require('./routes/FoodRoute');
 const MenuRoute = require('./routes/MenuRoute');
+const Placed = require('./routes/OrderRoute');
 const UserRoute = require('./routes/userRoute');
 
 const app = express();
@@ -16,5 +17,6 @@ app.use(cookieParser());
 app.use('/api/order', FoodRoute);
 app.use('/api/menu', MenuRoute);
 app.use('/api/user', UserRoute);
+app.use('/api/orders', Placed);
 
 module.exports = app;
