@@ -32,18 +32,24 @@ exports.findOne = async (req, res, next) => {
         },
       },
     ]);
-
     if (!orders.length) {
       res.status(404).json({
         status: 'fail',
         message: 'No user found with the provided id',
       });
     }
-
     res.status(200).json({
       status: 'success',
       data: orders[0],
     });
+
+    // const user = await User.findById(req.params.id).populate('customer_id');
+    // res.status(200).json({
+    //   status: 'success',
+    //   data: {
+    //     user,
+    //   },
+    // });
   } catch (err) {
     res.status(404).json({
       status: 'fail',

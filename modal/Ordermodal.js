@@ -9,11 +9,12 @@ const placedSchema = new mongoose.Schema({
     type: Number,
     required: [true, 'Must have a price'],
   },
-  customer_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: [true, 'A user must be there who ordered'],
-  },
+  customer_id: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+    },
+  ],
 });
 
 const Placed = mongoose.model('Placed', placedSchema);

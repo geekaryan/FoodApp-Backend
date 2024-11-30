@@ -19,11 +19,13 @@ exports.findAll = async (req, res, next) => {
 
 exports.findOne = async (req, res, next) => {
   try {
-    const order = await Placed.findById(req.params.id);
+    const order = await Placed.findById(req.params.id).populate('customer_id');
     res.status(200).json({
       status: 'success',
       length: order.length,
-      data: [order],
+      data: {
+        order,
+      },
     });
   } catch (err) {
     res.status(404).json({
