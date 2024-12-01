@@ -19,7 +19,8 @@ exports.findAll = async (req, res, next) => {
 
 exports.findOne = async (req, res, next) => {
   try {
-    const order = await Placed.findById(req.params.id).populate('customer_id');
+    // const order = await Placed.findById(req.params.id).populate('customer_id');
+    const order = await Placed.findById(req.params.id);
     res.status(200).json({
       status: 'success',
       length: order.length,
