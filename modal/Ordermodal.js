@@ -44,3 +44,4 @@ module.exports = Placed;
 //so my placed must contains the customer id then it must contain the array which take the food items are being ordered
 //so i have to do this one thing firstly i check for the customer_id if it is already prsent then i will look into the
 //items array and check if that item is already present then only increase the quantity else append item to the array list
+//I haven't done anything today 23-1-25
