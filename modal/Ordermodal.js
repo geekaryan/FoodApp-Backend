@@ -21,18 +21,17 @@ const placedSchema = new mongoose.Schema({
   },
   items: [
     {
-      item_id: {
-        type: mongoose.Schema.ObjectId,
-        ref: 'Menu',
-      },
-      item_quantity: {
-        type: Number,
-        required: [true, 'Minimum 1 items you must add'],
-      },
-      item_price: {
-        type: Number,
-        required: [true, 'Item price must be there'],
-      },
+      type: mongoose.Schema.ObjectId,
+      ref: 'Menu',
+    },
+  ],
+  quantity: [
+    { type: Number, required: [true, 'There must a quantity of the item'] },
+  ],
+  price: [
+    {
+      type: Number,
+      required: [true, 'There must be a price of a particular item'],
     },
   ],
 });
@@ -45,3 +44,20 @@ module.exports = Placed;
 //so i have to do this one thing firstly i check for the customer_id if it is already prsent then i will look into the
 //items array and check if that item is already present then only increase the quantity else append item to the array list
 //I haven't done anything today 23-1-25
+
+//I haven't done anything for past 6 days but not it's time to change
+
+//this is my current thinking as of 29-1-25
+// data need to be in my server
+// => /order route
+// -> customer_id
+// -> items_id
+// -> quantity
+// -> price
+
+// there is goin to be 3 array and primary key is goin to be customer_id
+
+// items_id, quantity, price
+// each index of items_id is going to represent,
+
+//the api has been successfully been made here
