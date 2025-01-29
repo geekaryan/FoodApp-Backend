@@ -38,14 +38,32 @@ exports.findOne = async (req, res, next) => {
 
 exports.createOrder = async (req, res) => {
   try {
-    const order = await Placed.create(req.body);
-    res.status(200).json({
-      status: 'success',
-      length: order.length,
-      data: {
-        order,
-      },
-    });
+    const { customer_id, order } = req.body;
+
+    //check if customer_id already placed
+    const existingOrder = await Placed.findOne({ customer_id });
+    if (!existingOrder) {
+      const neworder = await Placed.create({ customer_id, order });
+      res.status(201).json({
+        status: 'success',
+        length: order.length,
+        data: {
+          order: neworder,
+        },
+      });
+    } else {
+      existingOrder.order.push(...order);
+
+      //if we are adding into the exisiting one then we just have to direct push it and .save() is used to save
+      await existingOrder.save();
+
+      res.status(200).json({
+        status: 'success',
+        data: {
+          order: existingOrder,
+        },
+      });
+    }
   } catch (err) {
     res.status(404).json({
       status: 'fail',

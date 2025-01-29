@@ -19,19 +19,23 @@ const placedSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'User',
   },
-  items: [
+  order: [
     {
-      type: mongoose.Schema.ObjectId,
-      ref: 'Menu',
-    },
-  ],
-  quantity: [
-    { type: Number, required: [true, 'There must a quantity of the item'] },
-  ],
-  price: [
-    {
-      type: Number,
-      required: [true, 'There must be a price of a particular item'],
+      items: [
+        {
+          type: mongoose.Schema.ObjectId,
+          ref: 'Menu',
+        },
+      ],
+      quantity: [
+        { type: Number, required: [true, 'There must a quantity of the item'] },
+      ],
+      price: [
+        {
+          type: Number,
+          required: [true, 'There must be a price of a particular item'],
+        },
+      ],
     },
   ],
 });
