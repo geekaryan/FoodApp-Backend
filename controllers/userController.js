@@ -31,6 +31,41 @@ exports.findOne = async (req, res, next) => {
           as: 'orders',
         },
       },
+      {
+        $unwind: {
+          path: '$orders',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $unwind: {
+          path: '$orders.order',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: 'menus',
+          localField: 'orders.order.items',
+          foreignField: '_id',
+          as: 'orderItems',
+        },
+      },
+      {
+        $group: {
+          _id: '$_id',
+          name: { $first: '$name' },
+          email: { $first: '$email' },
+          orders: {
+            $push: {
+              _id: '$orders._id',
+              items: '$orderItems.name',
+              quantity: '$orders.order.quantity',
+              price: '$orders.order.price',
+            },
+          },
+        },
+      },
     ]);
     if (!orders.length) {
       res.status(404).json({
@@ -42,14 +77,6 @@ exports.findOne = async (req, res, next) => {
       status: 'success',
       data: orders[0],
     });
-
-    // const user = await User.findById(req.params.id).populate('customer_id');
-    // res.status(200).json({
-    //   status: 'success',
-    //   data: {
-    //     user,
-    //   },
-    // });
   } catch (err) {
     res.status(404).json({
       status: 'fail',

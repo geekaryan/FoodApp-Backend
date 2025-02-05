@@ -19,13 +19,28 @@ exports.findAll = async (req, res, next) => {
 
 exports.findOne = async (req, res, next) => {
   try {
-    // const order = await Placed.findById(req.params.id).populate('customer_id');
-    const order = await Placed.findById(req.params.id);
+    const order = await Placed.findById(req.params.id)
+      .populate('customer_id') // Populate customer details
+      .populate('order.items', 'name'); // Populate items with only the name field
+
+    if (!order) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'Order not found',
+      });
+    }
+
+    // Convert populated menu items from objects to only names
+    const updatedOrder = order.toObject(); // Convert Mongoose document to plain object
+    updatedOrder.order = updatedOrder.order.map((ord) => ({
+      ...ord,
+      items: ord.items.map((item) => item.name), // Extract only names
+    }));
+
     res.status(200).json({
       status: 'success',
-      length: order.length,
       data: {
-        order,
+        order: updatedOrder,
       },
     });
   } catch (err) {
