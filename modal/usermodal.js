@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: [true, 'User must have a email address'],
-    unique: true,
+    unique: true, //every user must be unique
     lowercase: true,
     validate: [validator.isEmail, 'Please provide a valid email'],
   },
@@ -32,6 +32,16 @@ const userSchema = new mongoose.Schema({
       },
       message: 'Passwords are not the same',
     },
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+  },
+  role: {
+    type: String,
+    enum: ['user', 'owner'], //enum is used to give restriction to the user that he only select from the given enum values
+    default: 'user',
+    required: true,
   },
 });
 
