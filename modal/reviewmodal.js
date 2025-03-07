@@ -27,3 +27,5 @@ const reviewSchema = new mongoose.Schema(
 const Review = mongoose.model('Review', reviewSchema);
 
 module.exports = Review;
+
+//In this we have to connect user and the food item such that they will going to form a relationship otherwise the route is working fine

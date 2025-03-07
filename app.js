@@ -6,6 +6,7 @@ const FoodRoute = require('./routes/FoodRoute');
 const MenuRoute = require('./routes/MenuRoute');
 const Placed = require('./routes/OrderRoute');
 const UserRoute = require('./routes/userRoute');
+const reviewRoute = require('./routes/ReviewRoute');
 
 const app = express();
 
@@ -18,5 +19,6 @@ app.use('/api/order', FoodRoute);
 app.use('/api/menu', MenuRoute);
 app.use('/api/user', UserRoute);
 app.use('/api/orders', Placed);
+app.use('/api/review', reviewRoute);
 
 module.exports = app;
