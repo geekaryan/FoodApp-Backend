@@ -17,12 +17,26 @@ const reviewSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+    menuItem: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Menu',
+      required: [true, 'Review must belong to a food item'],
+    },
+    user: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+      required: [true, 'Review must belong to a user'],
+    },
   },
   {
     toJson: { virtuals: true },
     toObject: { virtuals: true },
   }
 );
+
+//here we are making things unique such that a user can only review a food item once
+reviewSchema.index({ menuItem: 1, user: 1 }, { unique: true }); //finally it works we are only
+//getting one review per user and food item
 
 const Review = mongoose.model('Review', reviewSchema);
 
